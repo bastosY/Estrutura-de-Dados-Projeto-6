@@ -1,0 +1,16 @@
+ if(getHeight(root) == 2){
+        if(getHeight(root->right) == -1){
+            rotationRightLeft(root);
+        }
+        else{
+            rotationLeft(root);
+        }
+    }
+    else if(getHeight(root) == -2){
+        if(getHeight(root->left) == 1){
+            rotationLeftRight(root);
+        }
+        else{
+            rotationRight(root);
+        }
+    }
