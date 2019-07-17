@@ -17,7 +17,7 @@ typedef struct words{
 }word;
 
 void balacing(word *root);
-
+int getHeight(word *root);
 
 
 int comparation(int left, int right){
@@ -42,15 +42,21 @@ word *initWord(char name[31]){
 
 void rotationLeft(word *root){
     word *eixo = root->right;
-    root->right = eixo->left;
+    word *aux = eixo->left;
     eixo->left = root;
+    root->right = aux;
+    root->height = comparation(getHeight(root->left), getHeight(root->right)) + 1;
+    eixo->height = comparation(getHeight(eixo->left), getHeight(eixo->right)) + 1;
     root = eixo;
 }
 
 void rotationRight(word *root){
     word *eixo = root->left;
-    root->left = eixo->right;
+    word *aux = eixo->right;
     eixo->right = root;
+    root->left = aux;
+    root->height = comparation(getHeight(root->left), getHeight(root->right)) + 1;
+    eixo->height = comparation(getHeight(eixo->left), getHeight(eixo->right)) + 1;
     root = eixo;
     
 }
@@ -68,7 +74,7 @@ void rotationRightLeft(word *root){
 
 int getHeight(word *root){
     if(root == NULL){
-        return -1;
+        return 0;
     }
     else{
         return root->height;
@@ -77,20 +83,21 @@ int getHeight(word *root){
 
 int calcultatorBalacing(word *root){
     return getHeight(root->left) - getHeight(root->right);
-    
 }
 
 void balacing(word *root){
-    if(calcultatorBalacing(root) == 2){
-        if(calcultatorBalacing(root->right) == -1){
+    
+    if(getHeight(root) == 2){        
+        if(getHeight(root->right) == -1){
             rotationRightLeft(root);
         }
         else{
             rotationLeft(root);
         }
     }
-    else if(calcultatorBalacing(root) == -2){
-        if(calcultatorBalacing(root->left) == 1){
+    else if(getHeight(root) == -2){
+        
+        if(getHeight(root->left) == 1){
             rotationLeftRight(root);
         }
         else{
@@ -98,7 +105,7 @@ void balacing(word *root){
         }
     }
     else{
-        root->height = comparation(getHeight(root->left), getHeight(root->right));
+        //root->height = comparation(getHeight(root->left), getHeight(root->right));
     }
 }
 
@@ -124,17 +131,13 @@ void add(word **root, char name[31]){
         root[0] = initWord(name);
     }
 
-    else if(strcmp(root[0]->name, name) < 0){
+    else if(strcmp(root[0]->name, name) < 0){ 
         if(root[0]->right != NULL){
             aux[0] = root[0]->right;
             add(aux, name);
         }     
         else{
             root[0]->right = initWord(name);
-            root[0]->height = comparation(getHeight(root[0]->left), getHeight(root[0]->right) + 1);
-            
-            balacing(root[0]);
-            
         }
     }
 
@@ -146,16 +149,13 @@ void add(word **root, char name[31]){
         }
         else{
             root[0]->left = initWord(name); 
-    
-            root[0]->height = comparation(getHeight(root[0]->left), getHeight(root[0]->right) + 1);
-            
-            balacing(root[0]);
-            
+
         }
-    }
-
-    PED(aux[0]);
-
+    }   
+        //printf("%d",comparation(getHeight(root[0]->left), getHeight(root[0]->right) + 1) );
+        root[0]->height = comparation(getHeight(root[0]->left), getHeight(root[0]->right) + 1);
+        int balacing = calcultatorBalacing(root[0]);    
+        printf("%d\n", balacing);   
 }
 
 
@@ -164,13 +164,13 @@ int main(int argc, char const *argv[])
     word **root = (word**)malloc(sizeof(word*));
     root[0] = NULL;
 
-    add(root, "a");
-    add(root, "b");
+    add(root, "d");
     add(root, "c");
+    add(root, "b");
+    add(root, "a");
+
     
-  
     
-   
     return 0;
 }
 
